@@ -25,7 +25,7 @@ impl App {
             self.cost_per_minute = calculator.current_cost_per_minute();
             self.animation.set_state(self.cost_per_minute);
             terminal.draw(|frame| self.draw(frame))?;
-            thread::sleep(time::Duration::from_millis((1000 / config.frames_per_second) as u64));
+            thread::sleep(time::Duration::from_millis(1000 / config.frames_per_second as u64));
         }
         Ok(())
     }

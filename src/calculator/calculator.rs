@@ -26,6 +26,6 @@ impl Calculator {
                     .calculate_cost(&message.model, message.usage)
             })
             .sum();
-        self.smoothing.smooth_per_second(cost_this_sec) * 60f32
+        self.smoothing.update_and_retrieve(cost_this_sec) * 60f32
     }
 }
