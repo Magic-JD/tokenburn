@@ -10,7 +10,8 @@ use ratatui::{
 };
 use std::{io, thread, time};
 use std::sync::mpsc;
-
+use ratatui::style::Color;
+use ratatui::text::Span;
 use crate::configuration::config::Config;
 use crate::listener::key_listener::KeyListener;
 use crate::tui::tui::AnimationState::{HighSpend, LowSpend, MediumSpend, NoSpend};
@@ -45,15 +46,28 @@ pub struct App {
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
+        fn split_line(line: String) -> Vec<Span<'static>> {
+            let mut spans = vec![];
+            for c in line.chars() {
+               match c {
+                   ' ' => spans.push(Span::from(" ")),
+                   '▒' => spans.push(Span::from("▒").style(Color::Yellow)),
+                   '▓' => spans.push(Span::from("▓").style(Color::Red)),
+                   '░' => spans.push(Span::from("░").style(Color::Red)),
+                   _ => panic!("{}", format!("Invalid character '{:?}' in line '{:?}'", c, line)),
+               }
+            }
+            spans
+        }
         let title = Line::from(" Token Burn ".bold());
-        let footer = Line::from(" Burn Baby Burn ");
+        let footer = Line::from(self.animation.tagline().bold());
         let block = Block::bordered()
             .title(title.centered())
             .title_bottom(footer.centered())
             .border_set(border::THICK);
         let info_line = Line::from(format!("Token Burn per Minute: ${:.2}", self.cost_per_minute));
         let animation = self.animation.generate_frame();
-        let mut animation_lines = animation.lines().map(|line| Line::from(line)).collect::<Vec<_>>();
+        let mut animation_lines = animation.lines().map(|line| Line::from(split_line(line.into()))).collect::<Vec<_>>();
         let len = animation_lines.len();
         let height = area.height as usize - 3;
         if len < height {
@@ -72,7 +86,6 @@ impl Widget for &App {
             .block(block)
             .render(area, buf);
     }
-
 }
 
 #[derive(Debug, Default)]
@@ -81,7 +94,10 @@ struct Animation{
     state: AnimationState,
 }
 
-#[derive(Debug, Default)]
+impl Animation {
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
 enum AnimationState {
     #[default]
     NoSpend,
@@ -93,6 +109,15 @@ enum AnimationState {
 const ANIMATION_HEIGHT: usize = 40;
 
 impl Animation {
+
+    pub fn tagline(&self) -> String {
+        match self.state {
+            NoSpend => " Feed Me Money! ".into(),
+            LowSpend => " Less thinking more prompting ".into(),
+            MediumSpend => " Huang expects more out of you young vibe coder ".into(),
+            HighSpend => " Is this more than your salary yet? ".into(),
+        }
+    }
 
     pub fn set_state(&mut self, spend: f32) {
         self.state = match spend {
