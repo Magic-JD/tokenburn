@@ -19,18 +19,13 @@ impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         let config = Config::get_config();
         let mut calculator = Calculator::new();
-        let mut require_calculator = 0;
         let (sender, receiver) = mpsc::channel();
         thread::spawn( move || KeyListener::listen(sender) );
         while !receiver.try_recv().is_ok() {
-            if require_calculator == 0 {
-                self.cost_per_minute = calculator.current_cost_per_minute();
-            }
+            self.cost_per_minute = calculator.current_cost_per_minute();
             self.animation.set_state(self.cost_per_minute);
             terminal.draw(|frame| self.draw(frame))?;
-            require_calculator += 1;
-            require_calculator %= config.frames_per_second;
-            thread::sleep(time::Duration::from_millis(1000/config.frames_per_second));
+            thread::sleep(time::Duration::from_millis((1000 / config.frames_per_second) as u64));
         }
         Ok(())
     }

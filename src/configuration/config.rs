@@ -3,7 +3,7 @@ use std::sync::OnceLock;
 static CONFIG: OnceLock<Config> = OnceLock::new();
 
 pub struct Config {
-    pub frames_per_second: u64,
+    pub frames_per_second: i64,
 }
 
 impl Config {
