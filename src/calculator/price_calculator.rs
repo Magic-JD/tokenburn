@@ -10,7 +10,7 @@ impl PriceCalculator {
         let pricing_map = HashMap::from([
             (String::from("<synthetic>"), Pricing::new(10, 100)),
             (String::from("qwen3.5:0.8b"), Pricing::new(1, 10)),
-            (String::from("qwen2.5-coder:0.5b"), Pricing::new(10, 100)),
+            (String::from("qwen2.5-coder:0.5b"), Pricing::new(50, 500)),
         ]);
         Self { pricing_map }
     }
