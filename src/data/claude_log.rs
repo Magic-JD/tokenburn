@@ -16,4 +16,12 @@ pub struct Message {
 pub struct Usage {
     pub(crate) input_tokens: isize,
     pub(crate) output_tokens: isize,
+    pub(crate) cache_read_input_tokens: isize,
+    pub(crate) cache_creation: CacheCreation,
+}
+
+#[derive(Deserialize, Debug, Serialize)]
+pub struct CacheCreation {
+    pub(crate) ephemeral_1h_input_tokens: isize,
+    pub(crate) ephemeral_5m_input_tokens: isize,
 }
