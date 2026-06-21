@@ -26,6 +26,7 @@ impl LogTracker {
                     let token_log: Result<TokenLog, serde_json::Error> = serde_json::from_str(&line);
                     if let Ok(token_log) = token_log {
                         seen_logs.insert(token_log.message.id);
+                        break;
                     }
                 }
             }
