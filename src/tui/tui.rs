@@ -13,7 +13,6 @@ use ratatui::{
 };
 use std::sync::mpsc;
 use std::{io, thread, time};
-use std::cmp::max;
 
 impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {

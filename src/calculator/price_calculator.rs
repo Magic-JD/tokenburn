@@ -12,16 +12,16 @@ impl PriceCalculator {
             (String::from("qwen2.5-coder:0.5b"), Pricing::new(50.0, 500.0)),
 
             // Anthropic
-            (String::from("claude-opus-4.6"), Pricing::new(5.0, 25.0)),
-            (String::from("claude-opus-4.5"), Pricing::new(5.0, 25.0)),
-            (String::from("claude-opus-4.1"), Pricing::new(15.0, 75.0)),
+            (String::from("claude-opus-4-6"), Pricing::new(5.0, 25.0)),
+            (String::from("claude-opus-4-5"), Pricing::new(5.0, 25.0)),
+            (String::from("claude-opus-4-1"), Pricing::new(15.0, 75.0)),
 
-            (String::from("claude-sonnet-4.6"), Pricing::new(3.0, 15.0)),
-            (String::from("claude-sonnet-4.5"), Pricing::new(3.0, 15.0)),
+            (String::from("claude-sonnet-4-6"), Pricing::new(3.0, 15.0)),
+            (String::from("claude-sonnet-4-5"), Pricing::new(3.0, 15.0)),
             (String::from("claude-sonnet-4"), Pricing::new(3.0, 15.0)),
 
-            (String::from("claude-haiku-4.5"), Pricing::new(1.0, 5.0)),
-            (String::from("claude-haiku-3.5"), Pricing::new(0.8, 4.0)),
+            (String::from("claude-haiku-4-5"), Pricing::new(1.0, 5.0)),
+            (String::from("claude-haiku-3-5"), Pricing::new(0.8, 4.0)),
             (String::from("claude-haiku-3"), Pricing::new(0.25, 1.25)),
 
             // OpenAI GPT-5
