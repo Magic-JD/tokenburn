@@ -1,6 +1,6 @@
-use std::fs;
 use crate::configuration::config::DEFAULT_CONFIG;
 use crate::utils::file_system::config_path;
+use std::fs;
 
 pub fn run() {
     println!("Generating config file...");

@@ -10,10 +10,10 @@ mod actions;
 use crate::cli::command::Cli;
 use clap::Parser;
 
-use crate::tui::tui::App;
-use std::io;
 use crate::actions::generate_config;
 use crate::configuration::config::Config;
+use crate::tui::tui::App;
+use std::io;
 
 fn main() -> io::Result<()> {
     let args = Cli::parse();

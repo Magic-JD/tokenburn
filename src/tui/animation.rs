@@ -1,5 +1,5 @@
-use core::array::from_fn;
 use crate::tui::animation::AnimationState::{HighSpend, LowSpend, MediumSpend, NoSpend};
+use core::array::from_fn;
 use ratatui::prelude::{Color, Span};
 use ratatui::style::Stylize;
 use ratatui::text::Line;

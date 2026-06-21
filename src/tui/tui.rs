@@ -1,4 +1,7 @@
 use crate::calculator::calculator::Calculator;
+use crate::configuration::config::Config;
+use crate::listener::key_listener::KeyListener;
+use crate::tui::animation::Animation;
 use ratatui::{
     buffer::Buffer, layout::Rect,
     style::Stylize,
@@ -8,18 +11,15 @@ use ratatui::{
     DefaultTerminal,
     Frame,
 };
-use std::{io, thread, time};
 use std::sync::mpsc;
-use crate::configuration::config::Config;
-use crate::listener::key_listener::KeyListener;
-use crate::tui::animation::Animation;
+use std::{io, thread, time};
 
 impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         let config = Config::get_config();
         let mut calculator = Calculator::new();
         let (sender, receiver) = mpsc::channel();
-        thread::spawn( move || KeyListener::listen(sender) );
+        thread::spawn(move || KeyListener::listen(sender));
         while !receiver.try_recv().is_ok() {
             let start = time::SystemTime::now();
             self.cost_per_minute = calculator.current_cost_per_minute();

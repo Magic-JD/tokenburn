@@ -5,7 +5,10 @@ pub struct ConfigArgs {
     #[arg(long, help = "Percent ramping up and down to the average burn rate.")]
     pub ramp: Option<i16>,
 
-    #[arg(long, help = "How long the average should be spread over. Shorter will give high spikes but a quick fall off, longer will give a more active average but be less reactive. Value given in seconds.")]
+    #[arg(
+        long,
+        help = "How long the average should be spread over. Shorter will give high spikes but a quick fall off, longer will give a more active average but be less reactive. Value given in seconds."
+    )]
     pub spread: Option<i16>,
 }
 
@@ -21,7 +24,6 @@ pub struct TaskArgs {
 #[command(version = env!("CARGO_PKG_VERSION"), author = "Joseph Daunt")]
 #[command(after_help = "For more details, visit https://github.com/Magic-JD/tokenburn")]
 pub struct Cli {
-
     #[command(flatten)]
     pub config: ConfigArgs,
 

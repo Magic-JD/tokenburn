@@ -19,7 +19,7 @@ impl Smoothing {
             token_smoothing: vec![0f32; ramp_adjusted_frames_needed],
             len: ramp_adjusted_frames_needed,
             spread_over_seconds: seconds_spread,
-            ramp_frames
+            ramp_frames,
         }
     }
 
@@ -36,16 +36,15 @@ impl Smoothing {
                 self.token_smoothing[i] += i as f32 * fractional;
             }
 
-            for i in self.ramp_frames..self.len-self.ramp_frames {
+            for i in self.ramp_frames..self.len - self.ramp_frames {
                 self.token_smoothing[i] += averaged_cost_per_second;
             }
 
-            for i in self.len-self.ramp_frames..self.len {
+            for i in self.len - self.ramp_frames..self.len {
                 let fractional = averaged_cost_per_second / (self.ramp_frames - 1) as f32;
                 let idx = self.len - (i + 1);
                 self.token_smoothing[i] += idx as f32 * fractional;
             }
-
         }
     }
 

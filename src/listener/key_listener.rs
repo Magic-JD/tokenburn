@@ -1,11 +1,10 @@
-use std::sync::mpsc::Sender;
 use crossterm::event;
 use crossterm::event::KeyCode;
+use std::sync::mpsc::Sender;
 
-pub struct KeyListener{}
+pub struct KeyListener {}
 
 impl KeyListener {
-
     pub fn listen(sender: Sender<bool>) {
         let mut running = true;
         while running {
@@ -14,7 +13,7 @@ impl KeyListener {
                     KeyCode::Char('q') | KeyCode::Esc => {
                         running = false;
                         sender.send(true).unwrap()
-                    },
+                    }
                     _ => {}
                 }
             }

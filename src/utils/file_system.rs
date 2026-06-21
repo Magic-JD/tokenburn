@@ -1,6 +1,6 @@
-use std::{env, fs};
-use std::path::PathBuf;
 use dirs::config_dir;
+use std::path::PathBuf;
+use std::{env, fs};
 
 pub fn get_user_base_config_file() -> Option<String> {
     let buff = config_path();
