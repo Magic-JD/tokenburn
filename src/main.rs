@@ -22,7 +22,6 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
     Config::init(args.config);
-
     ratatui::run(|terminal| App::default().run(terminal))
 }
 

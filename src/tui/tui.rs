@@ -22,7 +22,7 @@ impl App {
         thread::spawn(move || KeyListener::listen(sender));
         while !receiver.try_recv().is_ok() {
             let start = time::SystemTime::now();
-            self.cost_per_minute = calculator.current_cost_per_minute();
+            self.cost_per_minute = 0.0f32;//calculator.current_cost_per_minute();
             self.animation.set_state(self.cost_per_minute);
             terminal.draw(|frame| self.draw(frame))?;
             let duration = start.elapsed().unwrap();

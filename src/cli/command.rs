@@ -1,4 +1,4 @@
-use clap::{ArgAction, Parser};
+use clap::Parser;
 
 #[derive(Debug, Parser)]
 pub struct ConfigArgs {

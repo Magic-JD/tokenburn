@@ -1,12 +1,8 @@
 use crate::cli::command::ConfigArgs;
 use crate::configuration::calculations_config::CalculationsConfig;
 use crate::utils::file_system::get_user_base_config_file;
-use dirs::config_dir;
 use serde::Deserialize;
-use std::collections::HashMap;
-use std::path::PathBuf;
 use std::sync::OnceLock;
-use std::{env, fs};
 use toml;
 
 static CONFIG: OnceLock<Config> = OnceLock::new();
