@@ -1,0 +1,13 @@
+# Configures how the averages are calculated and shown
+[calculations]
+
+# The percentage of time spent ramping up or ramping down. This extends the spread by this percentage to compensate for
+# the ramping time. In the situation where the ramp is 10% and the spread is 60, it will ramp for 6 seconds, remain
+# at the average rate for 54 seconds, before ramping down again over an additional 6 seconds, taking a total of 66s.
+percentage_ramp = 2
+
+# This shows the amount of time that the average per minute should be calculated over. As the token increases come in
+# instant groupings rather than being gradually added as the calculations are done, showing the live amounts is not very
+# useful. However, if the time is too long, the average will be more accurate, but it will be very slow to respond and
+# will tail out after the session is over.
+spread_in_seconds = 60

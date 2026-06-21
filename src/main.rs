@@ -3,14 +3,26 @@ mod data;
 mod calculator;
 mod configuration;
 mod listener;
+mod utils;
+mod cli;
+mod actions;
+
+use crate::cli::command::Cli;
+use clap::Parser;
 
 use crate::tui::tui::App;
 use std::io;
+use crate::actions::generate_config;
+use crate::configuration::config::Config;
 
 fn main() -> io::Result<()> {
-    // Challenges:
-    // Smoothing. Idea, each seconds token use is spread over 10s following a standard distribution. We add the previous seconds distribution to any new ones. This will give a smooth rise and fall. Configurable? -> work out a better algorithm for this.
-    // Have to learn how to make ascii art.
+    let args = Cli::parse();
+    if args.task.generate_config {
+        generate_config::run();
+        return Ok(());
+    }
+    Config::init(args.config);
+
     ratatui::run(|terminal| App::default().run(terminal))
 }
 

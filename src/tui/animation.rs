@@ -1,3 +1,4 @@
+use core::array::from_fn;
 use crate::tui::animation::AnimationState::{HighSpend, LowSpend, MediumSpend, NoSpend};
 use ratatui::prelude::{Color, Span};
 use ratatui::style::Stylize;
@@ -29,8 +30,8 @@ pub enum AnimationState {
 
 impl Default for Animation {
     fn default() -> Self {
-        let animations: [[Vec<Line>; 6]; 4] = core::array::from_fn(|animation_type| {
-            core::array::from_fn(|current_frame| {
+        let animations: [[Vec<Line>; 6]; 4] = from_fn(|animation_type| {
+            from_fn(|current_frame| {
                 Self::create_frame(animation_type, current_frame)
             })
         });
