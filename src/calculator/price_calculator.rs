@@ -13,6 +13,8 @@ impl PriceCalculator {
                 String::from("qwen2.5-coder:0.5b"),
                 Pricing::new(50.0, 500.0),
             ),
+            // Using sonnet 4.6 for synthetic
+            (String::from("<synthetic>"), Pricing::new(3.0, 15.0)),
             // Anthropic
             (String::from("claude-opus-4-6"), Pricing::new(5.0, 25.0)),
             (String::from("claude-opus-4-5"), Pricing::new(5.0, 25.0)),

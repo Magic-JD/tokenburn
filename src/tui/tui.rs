@@ -1,7 +1,7 @@
 use crate::calculator::calculator::Calculator;
 use crate::configuration::config::Config;
 use crate::listener::key_listener::KeyListener;
-use crate::tui::animation::AnimationPlayer;
+use crate::tui::animation::player::AnimationPlayer;
 use ratatui::{
     DefaultTerminal, Frame,
     buffer::Buffer,
