@@ -29,5 +29,4 @@ pub struct Cli {
 
     #[command(flatten)]
     pub task: TaskArgs,
-
 }

@@ -1,11 +1,11 @@
-mod tui;
-mod data;
-mod calculator;
-mod configuration;
-mod listener;
-mod utils;
-mod cli;
 mod actions;
+mod calculator;
+mod cli;
+mod configuration;
+mod data;
+mod listener;
+mod tui;
+mod utils;
 
 use crate::cli::command::Cli;
 use clap::Parser;
@@ -24,5 +24,3 @@ fn main() -> io::Result<()> {
     Config::init(args.config);
     ratatui::run(|terminal| App::default().run(terminal))
 }
-
-

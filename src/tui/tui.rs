@@ -1,15 +1,15 @@
 use crate::calculator::calculator::Calculator;
 use crate::configuration::config::Config;
 use crate::listener::key_listener::KeyListener;
-use crate::tui::animation::Animation;
+use crate::tui::animation::AnimationPlayer;
 use ratatui::{
-    buffer::Buffer, layout::Rect,
+    DefaultTerminal, Frame,
+    buffer::Buffer,
+    layout::Rect,
     style::Stylize,
     symbols::border,
     text::{Line, Text},
     widgets::{Block, Paragraph, Widget},
-    DefaultTerminal,
-    Frame,
 };
 use std::sync::mpsc;
 use std::{io, thread, time};
@@ -42,7 +42,7 @@ impl App {
 #[derive(Debug, Default)]
 pub struct App {
     cost_per_minute: f32,
-    animation: Animation,
+    animation: AnimationPlayer,
 }
 
 impl Widget for &App {
@@ -53,17 +53,21 @@ impl Widget for &App {
             .title(title.centered())
             .title_bottom(footer.centered())
             .border_set(border::THICK);
-        let info_line = Line::from(format!("Token Burn per Minute: ${:.2}", self.cost_per_minute));
+        let info_line = Line::from(format!(
+            "Token Burn per Minute: ${:.2}",
+            self.cost_per_minute
+        ));
         let mut animation_lines = self.animation.fetch_frame();
         let len = animation_lines.len();
         let height = area.height as usize - 3;
         if len < height {
             let shortfall = height - len;
             for _ in 0..shortfall {
-                animation_lines.insert(1, Line::default());
+                animation_lines.insert(0, Line::default());
             }
         } else if len > height {
-            animation_lines = animation_lines[animation_lines.len() - height..animation_lines.len()].to_owned();
+            animation_lines =
+                animation_lines[animation_lines.len() - height..animation_lines.len()].to_owned();
         }
         animation_lines.insert(0, info_line);
         let counter_text = Text::from(animation_lines);
@@ -74,4 +78,3 @@ impl Widget for &App {
             .render(area, buf);
     }
 }
-

@@ -20,10 +20,14 @@ impl LogTracker {
                 path
             })
             .unwrap();
-        for file in log_files(claude_project_dir.clone()).into_iter().map(|path| File::open(path).unwrap()) {
+        for file in log_files(claude_project_dir.clone())
+            .into_iter()
+            .map(|path| File::open(path).unwrap())
+        {
             for line in RevLines::new(file) {
                 if let Ok(line) = line {
-                    let token_log: Result<TokenLog, serde_json::Error> = serde_json::from_str(&line);
+                    let token_log: Result<TokenLog, serde_json::Error> =
+                        serde_json::from_str(&line);
                     if let Ok(token_log) = token_log {
                         seen_logs.insert(token_log.message.id);
                         break;
@@ -31,12 +35,18 @@ impl LogTracker {
                 }
             }
         }
-        Self { seen_logs, claude_project_dir }
+        Self {
+            seen_logs,
+            claude_project_dir,
+        }
     }
 
     pub fn new_logs(&mut self) -> Vec<Message> {
         let mut messages: Vec<Message> = Vec::new();
-        for file in log_files(self.claude_project_dir.clone()).into_iter().map(|path| File::open(path).unwrap()) {
+        for file in log_files(self.claude_project_dir.clone())
+            .into_iter()
+            .map(|path| File::open(path).unwrap())
+        {
             for line in RevLines::new(file) {
                 if let Ok(line) = line {
                     let token_log: Result<TokenLog, serde_json::Error> =

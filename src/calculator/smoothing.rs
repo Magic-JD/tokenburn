@@ -13,7 +13,8 @@ impl Smoothing {
         let fps = config.frames_per_second;
         let seconds_spread = config.time_period_seconds;
         let base_frames_needed = seconds_spread as usize * fps as usize;
-        let ramp_frames = ((base_frames_needed as f32 / 100f32) * config.percent_ramp as f32) as usize;
+        let ramp_frames =
+            ((base_frames_needed as f32 / 100f32) * config.percent_ramp as f32) as usize;
         let ramp_adjusted_frames_needed = base_frames_needed + ramp_frames;
         Smoothing {
             token_smoothing: vec![0f32; ramp_adjusted_frames_needed],

@@ -1,2 +1,2 @@
-pub mod tui;
 mod animation;
+pub mod tui;
