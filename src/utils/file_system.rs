@@ -1,4 +1,4 @@
-use dirs::config_dir;
+use dirs::{config_dir, home_dir};
 use std::path::PathBuf;
 use std::{env, fs};
 
@@ -10,6 +10,16 @@ pub fn config_path() -> PathBuf {
     let mut path = config_location();
     path.push("config.toml");
     path
+}
+
+pub fn claude_project_path() -> PathBuf {
+    let claude_project_dir = home_dir()
+        .map(|mut path| {
+            path.push(".claude/projects/");
+            path
+        })
+        .unwrap();
+    claude_project_dir
 }
 
 fn config_location() -> PathBuf {
