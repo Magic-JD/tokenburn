@@ -3,10 +3,9 @@ use crate::data::claude_log::{Message, TokenLog};
 use crate::utils::file_system::claude_project_path;
 use rev_lines::RevLines;
 use std::collections::{HashMap, HashSet};
-use std::fs::File;
+use std::fs::{read_dir, DirEntry as FsDirEntry, File};
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
-use walkdir::WalkDir;
 
 pub struct LogTracker {
     seen_logs: HashSet<String>,
@@ -38,7 +37,7 @@ impl LogTracker {
             .map(|path| File::open(path).unwrap())
             .filter_map(|file| {
                 RevLines::new(file)
-                    .filter_map(|line| line.ok())
+                    .flatten()
                     .filter_map(|line| serde_json::from_str::<TokenLog>(&line).ok())
                     .next()
             })
@@ -63,10 +62,10 @@ impl LogTracker {
             .collect();
         for file in files_needing_checking
             .into_iter()
-            .map(|path| File::open(path).unwrap())
+            .filter_map(|path| File::open(path).ok())
         {
             for token_log in RevLines::new(file)
-                .filter_map(|line| line.ok())
+                .flatten()
                 .filter_map(|line| serde_json::from_str::<TokenLog>(&line).ok())
             {
                 if self.seen_logs.contains(&token_log.message.id) {
@@ -108,20 +107,31 @@ impl LogTracker {
     }
 
     fn all_files(claude_project_dir: PathBuf) -> Vec<PathBuf> {
-        WalkDir::new(claude_project_dir)
+        Self::jsonl_recursive_search(
+            read_dir(claude_project_dir)
+                .unwrap()
+                .flatten()
+                .collect(),
+        )
+    }
+
+    fn jsonl_recursive_search(entry: Vec<FsDirEntry>) -> Vec<PathBuf> {
+        entry
             .into_iter()
-            .filter_map(|e| e.ok())
-            .filter(|e| e.metadata().unwrap().is_dir())
-            .flat_map(|e| std::fs::read_dir(e.into_path()).unwrap())
-            .filter_map(|e| e.ok())
-            .filter(|e| e.metadata().unwrap().is_file())
-            .filter(|e| {
-                e.path()
-                    .extension()
-                    .filter(|str| str.to_string_lossy() == "jsonl")
-                    .is_some()
+            .flat_map(|entry| {
+                if entry.file_type().unwrap().is_dir() {
+                    let dir = read_dir(entry.path())
+                        .unwrap()
+                        .flatten()
+                        .collect();
+                    Self::jsonl_recursive_search(dir)
+                } else {
+                    match entry.path().extension().and_then(|ext| ext.to_str()) {
+                        Some("jsonl") => vec![entry.path()],
+                        _ => vec![],
+                    }
+                }
             })
-            .map(|e| e.path())
-            .collect::<Vec<_>>()
+            .collect()
     }
 }
