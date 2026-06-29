@@ -23,8 +23,8 @@ impl App {
         thread::spawn(move || KeyListener::listen(sender));
         while !receiver.try_recv().is_ok() {
             let start = time::SystemTime::now();
-            self.cost_per_minute = calculator.current_cost_per_minute();
-            self.animation.set_state(self.cost_per_minute);
+            self.cost_per = calculator.current_cost_per_minute();
+            self.animation.set_state(self.cost_per);
             terminal.draw(|frame| self.draw(frame))?;
             let time_passed = start.elapsed().unwrap().as_millis() as u64;
             if time_passed < max_sleep {
@@ -41,7 +41,7 @@ impl App {
 
 #[derive(Debug, Default)]
 pub struct App {
-    cost_per_minute: f32,
+    cost_per: f32,
     animation: AnimationPlayer,
 }
 
@@ -53,10 +53,12 @@ impl Widget for &App {
             .title(title.centered())
             .title_bottom(footer.centered())
             .border_set(border::THICK);
-        let info_line = Line::from(format!(
-            "Token Burn per Minute: ${:.2}",
-            self.cost_per_minute
-        ));
+        let per_x_minutes = Config::get_config().per_x_minutes;
+        let info_line: Line = Line::from(format!(
+                "Token Burn per {}: ${:.2}",
+                format_duration(per_x_minutes),
+                self.cost_per
+            ));
         let mut animation_lines = self.animation.fetch_frame();
         let len = animation_lines.len();
         let height = area.height as usize - 3;
@@ -76,5 +78,24 @@ impl Widget for &App {
             .centered()
             .block(block)
             .render(area, buf);
+    }
+
+}
+fn format_duration(duration: u32) -> String {
+    match duration {
+        1 => "Minute".to_string(),
+        60 => "Hour".to_string(),
+        _ => {
+            let hours = duration / 60;
+            let minutes = duration % 60;
+            let mut parts = Vec::new();
+            if hours > 0 {
+                parts.push(format!("{} Hour{}", hours, if hours > 1 { "s" } else { "" }));
+            }
+            if minutes > 0 {
+                parts.push(format!("{} Minute{}", minutes, if minutes > 1 { "s" } else { "" }));
+            }
+            parts.join(" ")
+        },
     }
 }

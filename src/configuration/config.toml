@@ -13,3 +13,8 @@ percentage_ramp = 2
 # will tail out after the session is over.
 # The same as --spread
 spread_in_seconds = 60
+
+# This shows the amount of time that the average should be calculated for. By default it is per minute, but it can be set
+# to any amount of time.
+# Same as --per but is only set in whole minutes (cannot put 1h, would have to enter 60 instead).
+per_x_minutes = 1

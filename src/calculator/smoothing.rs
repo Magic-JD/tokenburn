@@ -3,7 +3,7 @@ use crate::configuration::config::Config;
 pub struct Smoothing {
     token_smoothing: Vec<f32>,
     len: usize,
-    spread_over_seconds: i16,
+    spread_over_seconds: u32,
     ramp_frames: usize,
 }
 

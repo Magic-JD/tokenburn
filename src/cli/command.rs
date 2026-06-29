@@ -3,13 +3,19 @@ use clap::Parser;
 #[derive(Debug, Parser)]
 pub struct ConfigArgs {
     #[arg(long, help = "Percent ramping up and down to the average burn rate.")]
-    pub ramp: Option<i16>,
+    pub ramp: Option<u32>,
 
     #[arg(
         long,
         help = "How long the average should be spread over. Shorter will give high spikes but a quick fall off, longer will give a more active average but be less reactive. Value given in seconds."
     )]
-    pub spread: Option<i16>,
+    pub spread: Option<u32>,
+
+    #[arg(
+        long,
+        help = "Can set the time to per x hours or per x minutes. x defaults to 1 if not provided."
+    )]
+    pub per: Option<String>
 }
 
 #[derive(Debug, Parser)]

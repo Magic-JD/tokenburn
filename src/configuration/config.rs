@@ -11,8 +11,9 @@ pub const DEFAULT_CONFIG: &str = include_str!("config.toml");
 #[derive(Debug, Deserialize, Clone)]
 pub struct Config {
     pub frames_per_second: i8,
-    pub time_period_seconds: i16,
-    pub percent_ramp: i16,
+    pub time_period_seconds: u32,
+    pub per_x_minutes: u32,
+    pub percent_ramp: u32,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -23,13 +24,13 @@ pub struct RawConfig {
 
 impl Config {
     pub fn init(config_args: ConfigArgs) {
-        let config = Config::new(config_args.ramp, config_args.spread);
+        let config = Config::new(config_args.ramp, config_args.spread, config_args.per);
         CONFIG
             .set(config)
             .expect("Failed to set configuration due to preexisting configuration");
     }
 
-    fn new(ramp: Option<i16>, spread: Option<i16>) -> Self {
+    fn new(ramp: Option<u32>, spread: Option<u32>, per: Option<String>) -> Self {
         let default: RawConfig =
             toml::from_str(DEFAULT_CONFIG).expect("Tool defined configuration failing to compile");
         let user_defined_calculation_config: Option<CalculationsConfig> =
@@ -48,14 +49,26 @@ impl Config {
                 &user_defined_calculation_config,
                 &|conf| conf.percentage_ramp,
             )),
+            per_x_minutes: per.map(|s| Self::extract_per_x_minutes(s)).unwrap_or(Self::extract_required(&default, &user_defined_calculation_config, &|conf|conf.per_x_minutes)),
         }
+    }
+
+    fn extract_per_x_minutes(requested: String) -> u32 {
+        let (amount, time_frame) = requested.split_at(requested.len()-1);
+        let total = amount.parse::<u32>().unwrap_or(1);
+        match time_frame {
+            "h" => total * 60,
+            "m" => total,
+            _ => panic!("Invalid time frame"),
+        }
+
     }
 
     fn extract_required(
         default: &RawConfig,
         user_defined: &Option<CalculationsConfig>,
-        extraction_function: &dyn Fn(CalculationsConfig) -> Option<i16>,
-    ) -> i16 {
+        extraction_function: &dyn Fn(CalculationsConfig) -> Option<u32>,
+    ) -> u32 {
         user_defined
             .clone()
             .and_then(extraction_function)

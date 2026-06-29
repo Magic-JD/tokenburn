@@ -1,6 +1,7 @@
 use crate::calculator::log_tracker::LogTracker;
 use crate::calculator::price_calculator::PriceCalculator;
 use crate::calculator::smoothing::Smoothing;
+use crate::configuration::config::Config;
 
 pub struct Calculator {
     price_calc: PriceCalculator,
@@ -26,6 +27,6 @@ impl Calculator {
                     .calculate_cost(&message.model, message.usage)
             })
             .sum();
-        self.smoothing.update_and_retrieve(cost_this_sec) * 60f32
+        self.smoothing.update_and_retrieve(cost_this_sec) * Config::get_config().per_x_minutes as f32 * 60.0
     }
 }
