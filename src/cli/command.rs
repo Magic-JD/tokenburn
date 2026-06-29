@@ -15,7 +15,7 @@ pub struct ConfigArgs {
         long,
         help = "Can set the time to per xh (hours), per xm (minutes) or per xs (seconds). x defaults to 1 if not provided."
     )]
-    pub per: Vec<String>
+    pub per: Vec<String>,
 }
 
 #[derive(Debug, Parser)]

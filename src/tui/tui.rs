@@ -58,7 +58,7 @@ impl Widget for &App {
             "Token Burn per {}: ${:.2}",
             format_duration(per_x_seconds),
             self.cost_per
-            ));
+        ));
         let mut animation_lines = self.animation.fetch_frame();
         let len = animation_lines.len();
         let height = area.height as usize - 3;
@@ -79,7 +79,6 @@ impl Widget for &App {
             .block(block)
             .render(area, buf);
     }
-
 }
 fn format_duration(duration: u32) -> String {
     match duration {
@@ -92,16 +91,28 @@ fn format_duration(duration: u32) -> String {
             let seconds = duration % 60 % 60;
             let mut parts = Vec::new();
             if hours > 0 {
-                parts.push(format!("{} Hour{}", hours, if hours > 1 { "s" } else { "" }));
+                parts.push(format!(
+                    "{} Hour{}",
+                    hours,
+                    if hours > 1 { "s" } else { "" }
+                ));
             }
             if minutes > 0 {
-                parts.push(format!("{} Minute{}", minutes, if minutes > 1 { "s" } else { "" }));
+                parts.push(format!(
+                    "{} Minute{}",
+                    minutes,
+                    if minutes > 1 { "s" } else { "" }
+                ));
             }
             if seconds > 0 {
-                parts.push(format!("{} Second{}", seconds, if seconds > 1 { "s" } else { "" }));
+                parts.push(format!(
+                    "{} Second{}",
+                    seconds,
+                    if seconds > 1 { "s" } else { "" }
+                ));
             }
             parts.join(" ")
-        },
+        }
     }
 }
 
@@ -121,19 +132,43 @@ mod tests {
         assert_eq!(format_duration(3601), "1 Hour 1 Second".to_string());
         assert_eq!(format_duration(3602), "1 Hour 2 Seconds".to_string());
         assert_eq!(format_duration(3660), "1 Hour 1 Minute".to_string());
-        assert_eq!(format_duration(3661), "1 Hour 1 Minute 1 Second".to_string());
-        assert_eq!(format_duration(3662), "1 Hour 1 Minute 2 Seconds".to_string());
+        assert_eq!(
+            format_duration(3661),
+            "1 Hour 1 Minute 1 Second".to_string()
+        );
+        assert_eq!(
+            format_duration(3662),
+            "1 Hour 1 Minute 2 Seconds".to_string()
+        );
         assert_eq!(format_duration(3720), "1 Hour 2 Minutes".to_string());
-        assert_eq!(format_duration(3721), "1 Hour 2 Minutes 1 Second".to_string());
-        assert_eq!(format_duration(3722), "1 Hour 2 Minutes 2 Seconds".to_string());
+        assert_eq!(
+            format_duration(3721),
+            "1 Hour 2 Minutes 1 Second".to_string()
+        );
+        assert_eq!(
+            format_duration(3722),
+            "1 Hour 2 Minutes 2 Seconds".to_string()
+        );
         assert_eq!(format_duration(7200), "2 Hours".to_string());
         assert_eq!(format_duration(7201), "2 Hours 1 Second".to_string());
         assert_eq!(format_duration(7202), "2 Hours 2 Seconds".to_string());
         assert_eq!(format_duration(7260), "2 Hours 1 Minute".to_string());
-        assert_eq!(format_duration(7261), "2 Hours 1 Minute 1 Second".to_string());
-        assert_eq!(format_duration(7262), "2 Hours 1 Minute 2 Seconds".to_string());
+        assert_eq!(
+            format_duration(7261),
+            "2 Hours 1 Minute 1 Second".to_string()
+        );
+        assert_eq!(
+            format_duration(7262),
+            "2 Hours 1 Minute 2 Seconds".to_string()
+        );
         assert_eq!(format_duration(7320), "2 Hours 2 Minutes".to_string());
-        assert_eq!(format_duration(7321), "2 Hours 2 Minutes 1 Second".to_string());
-        assert_eq!(format_duration(7322), "2 Hours 2 Minutes 2 Seconds".to_string());
+        assert_eq!(
+            format_duration(7321),
+            "2 Hours 2 Minutes 1 Second".to_string()
+        );
+        assert_eq!(
+            format_duration(7322),
+            "2 Hours 2 Minutes 2 Seconds".to_string()
+        );
     }
 }

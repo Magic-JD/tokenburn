@@ -39,17 +39,21 @@ impl Config {
                 .and_then(|tool_config: RawConfig| tool_config.calculations);
         Self {
             frames_per_second: 12,
-            time_period_seconds: Self::extract_per_x_seconds(spread).unwrap_or(Self::extract_required(
-                &default,
-                &user_defined_calculation_config,
-                &|conf| conf.spread_in_seconds,
-            )),
+            time_period_seconds: Self::extract_per_x_seconds(spread).unwrap_or(
+                Self::extract_required(&default, &user_defined_calculation_config, &|conf| {
+                    conf.spread_in_seconds
+                }),
+            ),
             percent_ramp: ramp.unwrap_or(Self::extract_required(
                 &default,
                 &user_defined_calculation_config,
                 &|conf| conf.percentage_ramp,
             )),
-            per_x_seconds: Self::extract_per_x_seconds(per).unwrap_or(Self::extract_required(&default, &user_defined_calculation_config, &|conf|conf.per_x_seconds)),
+            per_x_seconds: Self::extract_per_x_seconds(per).unwrap_or(Self::extract_required(
+                &default,
+                &user_defined_calculation_config,
+                &|conf| conf.per_x_seconds,
+            )),
         }
     }
 
@@ -57,16 +61,19 @@ impl Config {
         if all_requested.is_empty() {
             return None;
         }
-        let sum = all_requested.into_iter().map(|requested| {
-            let (amount, time_frame) = requested.split_at(requested.len() - 1);
-            let total = amount.parse::<u32>().unwrap_or(1);
-            match time_frame {
-                "h" => total * 60 * 60,
-                "m" => total * 60,
-                "s" => total,
-                _ => panic!("Invalid time frame"),
-            }
-        }).sum();
+        let sum = all_requested
+            .into_iter()
+            .map(|requested| {
+                let (amount, time_frame) = requested.split_at(requested.len() - 1);
+                let total = amount.parse::<u32>().unwrap_or(1);
+                match time_frame {
+                    "h" => total * 60 * 60,
+                    "m" => total * 60,
+                    "s" => total,
+                    _ => panic!("Invalid time frame"),
+                }
+            })
+            .sum();
         Some(sum)
     }
 

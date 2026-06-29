@@ -1,5 +1,5 @@
 # Changelog
-## [0.1.2]
+## [0.1.3]
 ### Fixed
 - Now calculates the cost of agents.
 - Allows you to change the cost per time frame.

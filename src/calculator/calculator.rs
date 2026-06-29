@@ -27,6 +27,7 @@ impl Calculator {
                     .calculate_cost(&message.model, message.usage)
             })
             .sum();
-        self.smoothing.update_and_retrieve(cost_this_sec) * Config::get_config().per_x_seconds as f32
+        self.smoothing.update_and_retrieve(cost_this_sec)
+            * Config::get_config().per_x_seconds as f32
     }
 }
