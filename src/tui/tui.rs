@@ -53,11 +53,11 @@ impl Widget for &App {
             .title(title.centered())
             .title_bottom(footer.centered())
             .border_set(border::THICK);
-        let per_x_minutes = Config::get_config().per_x_minutes;
+        let per_x_seconds = Config::get_config().per_x_seconds;
         let info_line: Line = Line::from(format!(
-                "Token Burn per {}: ${:.2}",
-                format_duration(per_x_minutes),
-                self.cost_per
+            "Token Burn per {}: ${:.2}",
+            format_duration(per_x_seconds),
+            self.cost_per
             ));
         let mut animation_lines = self.animation.fetch_frame();
         let len = animation_lines.len();
@@ -83,11 +83,13 @@ impl Widget for &App {
 }
 fn format_duration(duration: u32) -> String {
     match duration {
-        1 => "Minute".to_string(),
-        60 => "Hour".to_string(),
+        1 => "Second".to_string(),
+        60 => "Minute".to_string(),
+        3600 => "Hour".to_string(),
         _ => {
-            let hours = duration / 60;
-            let minutes = duration % 60;
+            let hours = duration / 60 / 60;
+            let minutes = duration / 60 % 60;
+            let seconds = duration % 60 % 60;
             let mut parts = Vec::new();
             if hours > 0 {
                 parts.push(format!("{} Hour{}", hours, if hours > 1 { "s" } else { "" }));
@@ -95,7 +97,43 @@ fn format_duration(duration: u32) -> String {
             if minutes > 0 {
                 parts.push(format!("{} Minute{}", minutes, if minutes > 1 { "s" } else { "" }));
             }
+            if seconds > 0 {
+                parts.push(format!("{} Second{}", seconds, if seconds > 1 { "s" } else { "" }));
+            }
             parts.join(" ")
         },
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn format_duration_test() {
+        assert_eq!(format_duration(1), "Second".to_string());
+        assert_eq!(format_duration(2), "2 Seconds".to_string());
+        assert_eq!(format_duration(60), "Minute".to_string());
+        assert_eq!(format_duration(61), "1 Minute 1 Second".to_string());
+        assert_eq!(format_duration(62), "1 Minute 2 Seconds".to_string());
+        assert_eq!(format_duration(122), "2 Minutes 2 Seconds".to_string());
+        assert_eq!(format_duration(3600), "Hour".to_string());
+        assert_eq!(format_duration(3601), "1 Hour 1 Second".to_string());
+        assert_eq!(format_duration(3602), "1 Hour 2 Seconds".to_string());
+        assert_eq!(format_duration(3660), "1 Hour 1 Minute".to_string());
+        assert_eq!(format_duration(3661), "1 Hour 1 Minute 1 Second".to_string());
+        assert_eq!(format_duration(3662), "1 Hour 1 Minute 2 Seconds".to_string());
+        assert_eq!(format_duration(3720), "1 Hour 2 Minutes".to_string());
+        assert_eq!(format_duration(3721), "1 Hour 2 Minutes 1 Second".to_string());
+        assert_eq!(format_duration(3722), "1 Hour 2 Minutes 2 Seconds".to_string());
+        assert_eq!(format_duration(7200), "2 Hours".to_string());
+        assert_eq!(format_duration(7201), "2 Hours 1 Second".to_string());
+        assert_eq!(format_duration(7202), "2 Hours 2 Seconds".to_string());
+        assert_eq!(format_duration(7260), "2 Hours 1 Minute".to_string());
+        assert_eq!(format_duration(7261), "2 Hours 1 Minute 1 Second".to_string());
+        assert_eq!(format_duration(7262), "2 Hours 1 Minute 2 Seconds".to_string());
+        assert_eq!(format_duration(7320), "2 Hours 2 Minutes".to_string());
+        assert_eq!(format_duration(7321), "2 Hours 2 Minutes 1 Second".to_string());
+        assert_eq!(format_duration(7322), "2 Hours 2 Minutes 2 Seconds".to_string());
     }
 }

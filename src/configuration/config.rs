@@ -12,7 +12,7 @@ pub const DEFAULT_CONFIG: &str = include_str!("config.toml");
 pub struct Config {
     pub frames_per_second: i8,
     pub time_period_seconds: u32,
-    pub per_x_minutes: u32,
+    pub per_x_seconds: u32,
     pub percent_ramp: u32,
 }
 
@@ -30,7 +30,7 @@ impl Config {
             .expect("Failed to set configuration due to preexisting configuration");
     }
 
-    fn new(ramp: Option<u32>, spread: Option<u32>, per: Option<String>) -> Self {
+    fn new(ramp: Option<u32>, spread: Vec<String>, per: Vec<String>) -> Self {
         let default: RawConfig =
             toml::from_str(DEFAULT_CONFIG).expect("Tool defined configuration failing to compile");
         let user_defined_calculation_config: Option<CalculationsConfig> =
@@ -39,7 +39,7 @@ impl Config {
                 .and_then(|tool_config: RawConfig| tool_config.calculations);
         Self {
             frames_per_second: 12,
-            time_period_seconds: spread.unwrap_or(Self::extract_required(
+            time_period_seconds: Self::extract_per_x_seconds(spread).unwrap_or(Self::extract_required(
                 &default,
                 &user_defined_calculation_config,
                 &|conf| conf.spread_in_seconds,
@@ -49,19 +49,25 @@ impl Config {
                 &user_defined_calculation_config,
                 &|conf| conf.percentage_ramp,
             )),
-            per_x_minutes: per.map(|s| Self::extract_per_x_minutes(s)).unwrap_or(Self::extract_required(&default, &user_defined_calculation_config, &|conf|conf.per_x_minutes)),
+            per_x_seconds: Self::extract_per_x_seconds(per).unwrap_or(Self::extract_required(&default, &user_defined_calculation_config, &|conf|conf.per_x_seconds)),
         }
     }
 
-    fn extract_per_x_minutes(requested: String) -> u32 {
-        let (amount, time_frame) = requested.split_at(requested.len()-1);
-        let total = amount.parse::<u32>().unwrap_or(1);
-        match time_frame {
-            "h" => total * 60,
-            "m" => total,
-            _ => panic!("Invalid time frame"),
+    fn extract_per_x_seconds(all_requested: Vec<String>) -> Option<u32> {
+        if all_requested.is_empty() {
+            return None;
         }
-
+        let sum = all_requested.into_iter().map(|requested| {
+            let (amount, time_frame) = requested.split_at(requested.len() - 1);
+            let total = amount.parse::<u32>().unwrap_or(1);
+            match time_frame {
+                "h" => total * 60 * 60,
+                "m" => total * 60,
+                "s" => total,
+                _ => panic!("Invalid time frame"),
+            }
+        }).sum();
+        Some(sum)
     }
 
     fn extract_required(

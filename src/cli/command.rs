@@ -7,15 +7,15 @@ pub struct ConfigArgs {
 
     #[arg(
         long,
-        help = "How long the average should be spread over. Shorter will give high spikes but a quick fall off, longer will give a more active average but be less reactive. Value given in seconds."
+        help = "How long the average should be spread over. Shorter will give high spikes but a quick fall off, longer will give a more active average but be less reactive. Value given as spread over xh (hours), over xm (minutes) or over xs (seconds)."
     )]
-    pub spread: Option<u32>,
+    pub spread: Vec<String>,
 
     #[arg(
         long,
-        help = "Can set the time to per x hours or per x minutes. x defaults to 1 if not provided."
+        help = "Can set the time to per xh (hours), per xm (minutes) or per xs (seconds). x defaults to 1 if not provided."
     )]
-    pub per: Option<String>
+    pub per: Vec<String>
 }
 
 #[derive(Debug, Parser)]

@@ -11,10 +11,10 @@ percentage_ramp = 2
 # instant groupings rather than being gradually added as the calculations are done, showing the live amounts is not very
 # useful. However, if the time is too long, the average will be more accurate, but it will be very slow to respond and
 # will tail out after the session is over.
-# The same as --spread
+# Same as --spread but is only set in seconds (cannot put 1h, would have to enter 3600 instead).
 spread_in_seconds = 60
 
-# This shows the amount of time that the average should be calculated for. By default it is per minute, but it can be set
+# This shows the amount of time that the average should be calculated for. By default it is per 60s, but it can be set
 # to any amount of time.
-# Same as --per but is only set in whole minutes (cannot put 1h, would have to enter 60 instead).
-per_x_minutes = 1
+# Same as --per but is only set in seconds (cannot put 1h, would have to enter 3600 instead).
+per_x_seconds = 60

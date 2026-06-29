@@ -4,5 +4,5 @@ use serde::Deserialize;
 pub struct CalculationsConfig {
     pub percentage_ramp: Option<u32>,
     pub spread_in_seconds: Option<u32>,
-    pub per_x_minutes: Option<u32>,
+    pub per_x_seconds: Option<u32>,
 }
