@@ -12,7 +12,7 @@ Tokenburn aims to show just how much money you are burning every time you prompt
 ### Install prebuilt binaries via shell script
 
 ```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Magic-JD/tokenburn/releases/latest/download/is-fast-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Magic-JD/tokenburn/releases/latest/download/tokenburn-installer.sh | sh
 ```
 
 ### Install prebuilt binaries via Homebrew
