@@ -6,13 +6,27 @@ See how much money you are shovelling on the fire on a minute by minute basis!
 
 Tokenburn aims to show just how much money you are burning every time you prompt your model. It allows you to see which operations are costly in real time, as well as providing a little bit of lighthearted fun to the insanity that is the current state of software engineering.
 
-# Installing
+## Installing the program ![Latest Release](https://img.shields.io/github/v/release/Magic-JD/tokenburn?include_prereleases)
 
-## Install latest from source with cargo:
+
+### Install prebuilt binaries via shell script
 
 ```sh
-cargo install --git https://github.com/Magic-JD/tokenburn.git
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Magic-JD/tokenburn/releases/latest/download/is-fast-installer.sh | sh
 ```
+
+### Install prebuilt binaries via Homebrew
+
+```sh
+brew install magic-jd/tap/tokenburn
+```
+
+### Install latest from source with cargo:
+
+```sh
+cargo install --git https://github.com/Magic-JD/magic-jd.git
+```
+
 
 # Running
 
