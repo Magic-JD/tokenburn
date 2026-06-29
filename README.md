@@ -24,7 +24,7 @@ brew install magic-jd/tap/tokenburn
 ### Install latest from source with cargo:
 
 ```sh
-cargo install --git https://github.com/Magic-JD/magic-jd.git
+cargo install --git https://github.com/Magic-JD/tokenburn.git
 ```
 
 
