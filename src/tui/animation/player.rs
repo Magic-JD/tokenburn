@@ -1,3 +1,4 @@
+use crate::configuration::config::Config;
 use crate::tui::animation::animation::{Animation, AnimationState};
 use crate::tui::animation::player::AnimationState::{HighSpend, LowSpend, MediumSpend, NoSpend};
 use AnimationState::BrainRot;
@@ -45,11 +46,12 @@ impl AnimationPlayer {
     }
 
     pub fn set_state(&mut self, spend: f32) {
+        let minimum = (0.5 / 60.0) * Config::get_config().per_x_seconds as f32;
         self.state = match spend {
             0.0 => NoSpend,
-            spend if spend < 0.5 => LowSpend,
-            spend if spend < 1.0 => MediumSpend,
-            spend if spend < 2.0 => HighSpend,
+            spend if spend < minimum => LowSpend,
+            spend if spend < minimum * 2.0 => MediumSpend,
+            spend if spend < minimum * 4.0 => HighSpend,
             _ => BrainRot,
         };
         self.frame += 1;
